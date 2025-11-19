@@ -2,7 +2,7 @@
 
 This repository contains the benchmark code, measurement data, and kernel modules developed and used for the experiments presented in the paper:
 
-> Evaluating Quantile Regression Neural Networks for Optimizing Real-Time Applications on Heterogeneous Platforms
+> [Evaluating quantile regression neural networks for optimizing real-time applications on heterogeneous platforms](https://doi.org/10.1016/j.future.2025.108239)
 
 ⚠️ **Note:** This repository is **under construction** and will be finalized alongside the final version of the paper.
 
@@ -41,4 +41,4 @@ For questions or feedback, please contact: [your.email@institution.com]
 
 If you use this code or data in your research, please cite the corresponding paper:
 
-> [[CEvaluating quantile regression neural networks for optimizing real-time applications on heterogeneous platforms](https://doi.org/10.1016/j.future.2025.108239)]
+> [[Evaluating quantile regression neural networks for optimizing real-time applications on heterogeneous platforms](https://doi.org/10.1016/j.future.2025.108239)]
