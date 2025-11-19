@@ -41,4 +41,4 @@ For questions or feedback, please contact: [your.email@institution.com]
 
 If you use this code or data in your research, please cite the corresponding paper:
 
-> [Citation placeholder – to be updated once the paper is published]
+> [[CEvaluating quantile regression neural networks for optimizing real-time applications on heterogeneous platforms](https://doi.org/10.1016/j.future.2025.108239)]
