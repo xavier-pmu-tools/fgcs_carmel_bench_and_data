@@ -1,25 +1,26 @@
 # PMU-monitoring-module
 PMU monitoring module and examples, tested on a Jetson AGX Xavier device.
 
-## Este repo
+## This repo
 
-Este repositorio contiene dos módulos Kernel que sirven para acceder a los contadores de rendimiento de los Carmel Cores que contiene la plataforma Jetson AGX Xavier. Todda la información de como se ha accedido a los registros se encuentra en la documentación ubicada en el directorio *docu*.
+This repository contains two Kernel modules that are used to access the performance counters of the Carmel Cores that the Jetson AGX Xavier platform contains. All the information about how the registers have been accessed is found in the documentation located in the *docu* directory.
 
-El repositorio contiene dos módulos, ubicados en el directorio *module*.
+The repository contains two modules, located in the *module* directory.
 
-1) **PMU module:** Accede a los registros disponibles del procesador. Hay que tener en cuenta que en el procesador Carmel no están disponibles todos los eventos disponibles para el ARMv8. Estos se detallan en el Technical Reference Manual (TRM) de la Serie Jetson AGX Xavier.
-2) **NV PMU module**: Modulo para acceder a los eventos propios de NVIDIA implementados el procesador Carmel. Como se especifica en el TRM estos contadores son comunes para todos los procesadores. Se les denomina *Uncore events*.
+1) **PMU module:** Accesses the available registers of the processor. It must be taken into account that in the Carmel processor not all the events available for ARMv8 are available. These are detailed in the Technical Reference Manual (TRM) of the Jetson AGX Xavier Series.
+2) **NV PMU module**: Module to access NVIDIA's own events implemented in the Carmel processor. As specified in the TRM these counters are common for all the processors. They are called *Uncore events*.
 
-En el directorio *include* se encuentran tres ficheros de cabecera.
+In the *include* directory there are three header files.
 
-- *carmel-pmu-events.h*: Contiene todos los eventos disponibles para los procesadores Carmel, tanto los eventos del procesador como los *Uncore*.
-- *uncore-pmu-regs.h*: Contiene la definición de los registros para la obtención de los *Uncore events*.
-- *pmu_cfg*: Se definen las estructuras de datos para configurar los PMUs. Define las llamadas a los módulos.
+- *carmel-pmu-events.h*: Contains all the events available for the Carmel processors, both the processor events and the *Uncore*.
+- *uncore-pmu-regs.h*: Contains the definition of the registers for obtaining the *Uncore events*.
+- *pmu_cfg*: The data structures to configure the PMUs are defined. It defines the calls to the modules.
 
 
-## Instalar/Desinstalar
 
-Comandos para instalar/desinstalar módulos:
+## Install/Uninstall
+
+Commands to install/uninstall modules:
 
 ```bash
 # Compile modules
@@ -30,24 +31,25 @@ make load
 make unload
 # Clean
 make clean
-```
-
-## Como usar
-
-Una vez instalado, para acceder a la configuración de los registro, se creara un nuevo dispositivo en el sistema de ficheros Linux (```/dev/pmu``` para los eventos del procesador y ```/dev/nv_pmu``` para los eventos *Uncore*).
-
-A continuación se describe como configurar desde un programa de usuario, los PMUs
-
-**Nota:** La aplicación creada necesitara de permisos ```sudo``` para poder acceder a los registros. 
-
-**Nota:** Asegurar (mediante afinidad por ejemplo) que lo que quieres medir se está ejecutando en la misma CPU en el que estás midiendo para una correcta lectura. 
-
-**Nota:** Los procesos descritos aquí de detallan en la documentación del directrio *docu*. 
 
 
-### Acceso a los PMUs del procesador
+## How to use
 
-Primero abriremos el dispositivo instalado.
+Once installed, to access the register configuration, a new device will be created in the Linux file system (```/dev/pmu``` for processor events and ```/dev/nv_pmu``` for *Uncore* events).
+
+Below is a description of how to configure the PMUs from a user program.
+
+**Note:** The created application will need ```sudo``` permissions to access the registers. 
+
+**Note:** Ensure (using affinity, for example) that what you want to measure is running on the same CPU on which you are measuring for a correct reading. 
+
+**Note:** The processes described here are detailed in the documentation in the *docu* directory.
+
+
+
+### Accessing the processor PMUs
+
+First, we will open the installed device.
 
 ```c
 #define DEVICE_PATH "/dev/pmu"
@@ -59,15 +61,15 @@ if (fd == -1) {
 }
 ```
 
-Acordarse de al final del programa cerrar el fichero.
+Remember to close the file at the end of the program.
 
 ```c
 close(fd);
 ```
 
-Necesitaremos una estructura de datos (definida en el fichero de cabecera *pmu_cfg.h*) para guardar la configuración del PMU. Se asignarán el evento que se desea medir, y en cual de los PMUs disponibles se desea medir.
+We will need a data structure (defined in the header file pmu_cfg.h) to store the PMU configuration. The event to be measured and which of the available PMUs will be used are assigned.
 
-Función ejemplo para la configuración:
+Example function for the configuration:
 
 ```c
 void set_pmu_config(struct pmu_config *cfg, uint32_t event_type, uint32_t counter_index){
@@ -77,7 +79,7 @@ void set_pmu_config(struct pmu_config *cfg, uint32_t event_type, uint32_t counte
 ```
 
 
-Guardar configuración deseada:
+Store the desired configuration:
 ```c
 // Configure PMUs    
 struct pmu_config pmu_1; 
@@ -85,7 +87,7 @@ struct pmu_config pmu_1;
 set_pmu_config(&pmu_1, event_type, counter_index);
 ```
 
-El primer paso será habilitar la monitorización. Mediante este paso se configura también el PMU para medir el evento deseado.
+The first step will be to enable monitoring. With this step, the PMU is also configured to measure the desired event.
 
 ```c
 if (ioctl(fd, IOCTL_ENABLE_MONITORING, &pmu_1) == -1) {
@@ -94,7 +96,7 @@ if (ioctl(fd, IOCTL_ENABLE_MONITORING, &pmu_1) == -1) {
 }
 ```
 
-Empezar a monitorizar. El PMU empieza a monitorizar el evento deseado. 
+Start monitoring. The PMU begins to monitor the desired event. 
 
 ```c
 if (ioctl(fd, IOCTL_START_MONITORING, &pmu_1) == -1) {
@@ -103,7 +105,7 @@ if (ioctl(fd, IOCTL_START_MONITORING, &pmu_1) == -1) {
 }
 ```
 
-Leer contador. Este paso habrá que hacerlo las veces que se desee, por ejemplo, al inicio y al final de la tarea que se quiere monitorizar para así hacer una resta del valor final del contador y el inicial. Una vez leído el contador, se recomienda guardar el valor, sino en la siguiente lectura se sobre-escribirá.
+Read counter. This step should be done as many times as needed, for example, at the beginning and end of the task you want to monitor to subtract the final counter value from the initial one. Once the counter is read, it is recommended to store the value; otherwise, it will be overwritten in the next reading.
 
 ```c
 if (ioctl(fd, IOCTL_READ_COUNTER, &pmu_1) == -1) {
@@ -114,7 +116,7 @@ if (ioctl(fd, IOCTL_READ_COUNTER, &pmu_1) == -1) {
 counter_value = pmu_1.counter_value;
 ```
 
-Una vez hayamos terminado de monitorizar paramos el contador, esto deshabilitara el contador configurado.
+Once we have finished monitoring, we stop the counter. This will disable the configured counter.
 
 ```c
 if (ioctl(fd, IOCTL_STOP_MONITORING, &pmu_1) == -1) {
@@ -123,7 +125,7 @@ if (ioctl(fd, IOCTL_STOP_MONITORING, &pmu_1) == -1) {
 }
 ```
 
-Por último, para cerrar el programa, deshabilitaremos el PMU.
+Finally, to close the program, we will disable the PMU.
 
 ```c
 if (ioctl(fd, IOCTL_DISABLE_MONITORING) == -1) {
@@ -132,11 +134,11 @@ if (ioctl(fd, IOCTL_DISABLE_MONITORING) == -1) {
 }
 ```
 
-### Acceso a los eventos Uncore
+### Accessing the Uncore events
 
-Para acceder a los eventos *Uncore* el proceso es similar al apartado anterior con algunas pequeñas diferencias debido a las características de estos eventos.
+To access the *Uncore* events, the process is similar to the previous section with some small differences due to the characteristics of these events.
 
-Al igual que antes, abrimos el dispositivo creado.
+As before, we open the created device.
 
 ```c
 #define DEVICE_PATH "/dev/nv_pmu"
@@ -148,9 +150,9 @@ if (fd == -1) {
 }
 ```
 
-Ahora guardamos la configuración deseada en la estructura de datos. Ahora la configuración es diferente, como se indica en la documentación en el directorio *docu* y en el TRM, hay que indicar el *unit group* y el *unit* que se desea.  
+Now we store the desired configuration in the data structure. The configuration is different now: as indicated in the documentation in the docu directory and in the TRM, you must specify the *unit group* and the *unit* you want.  
 
-Función ejemplo para la configuración:
+Example function for the configuration:
 
 ```c
 void set_pmu_config(struct carmel_pmu_config *cfg, uint32_t event_type, uint8_t unit_group, uint8_t unit, uint8_t counter_index){
@@ -161,7 +163,7 @@ void set_pmu_config(struct carmel_pmu_config *cfg, uint32_t event_type, uint8_t 
 }
 ```
 
-Guardar configuración deseada:
+Store the desired configuration:
 
 ```c
 // Configure PMUs    
@@ -170,7 +172,7 @@ struct carmel_pmu_config pmu_1;
 set_pmu_config(&pmu_1, event_type, unit_group, unit, counter_index);
 ```
 
-Habilitamos y configuramos el PMU:
+We enable and configure the PMU:
 
 ```c
 if (ioctl(fd, IOCTL_ENABLE_NV_UNCORE_MONITORING, &pmu_1) == -1) {
@@ -179,7 +181,7 @@ if (ioctl(fd, IOCTL_ENABLE_NV_UNCORE_MONITORING, &pmu_1) == -1) {
 }
 ```
 
-Comenzamos a contar.
+We start counting.
 
 ```c
 if (ioctl(fd, IOCTL_START_NV_UNCORE_MONITORING, &pmu_1) == -1) {
@@ -188,7 +190,7 @@ if (ioctl(fd, IOCTL_START_NV_UNCORE_MONITORING, &pmu_1) == -1) {
 }
 ```
 
-Leemos el contador y guardamos el valor.
+We read the counter and store the value.
 
 ```c
 if (ioctl(fd, IOCTL_READ_NV_UNCORE_COUNTER, &pmu_1) == -1) {
@@ -199,7 +201,7 @@ if (ioctl(fd, IOCTL_READ_NV_UNCORE_COUNTER, &pmu_1) == -1) {
 counter_value = pmu_1.counter_value;
 ```
 
-Paramos el contador, una vez leídos los datos necesarios.
+We stop the counter once the necessary data has been read.
 
 ```c
 if (ioctl(fd, IOCTL_STOP_NV_UNCORE_MONITORING, &pmu_1) == -1) {
@@ -208,7 +210,7 @@ if (ioctl(fd, IOCTL_STOP_NV_UNCORE_MONITORING, &pmu_1) == -1) {
 }
 ```
 
-Deshabilitamos el PMU.
+We disable the PMU.
 
 ```c
 if (ioctl(fd, IOCTL_DISABLE_NV_UNCORE_MONITORING) == -1) {
@@ -217,7 +219,7 @@ if (ioctl(fd, IOCTL_DISABLE_NV_UNCORE_MONITORING) == -1) {
 }
 ```
 
-Por último cerramos el directorio donde se encuentra el dispositivo creado.
+Finally, we close the directory where the created device is located.
 
 ```c
 close(fd);
