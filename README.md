@@ -116,9 +116,9 @@ The repository includes documentation for the PMU monitoring module in [PMU-moni
 These documents explain how the core and uncore counters are configured and how the module is used from user space.
 
 
-### event_motitor_lectures
+### event_monitor_lectures
 
-The [event_motitor_lectures](event_motitor_lectures) directory contains the CSV files with the measurements collected in the paper for each benchmark. Each file stores the event counters for a given benchmark across consecutive reads, with the benchmark-specific event mapping summarized below.
+The [event_monitor_lectures](event_monitor_lectures) directory contains the CSV files with the measurements collected in the paper for each benchmark. Each file stores the event counters for a given benchmark across consecutive reads, with the benchmark-specific event mapping summarized below.
 
 | Read | PMU 0 | PMU 1 | PMU 2 | PMU 3 | PMU 4 | PMU 5 | U-PMU 0 | U-PMU 1 | U-PMU 2 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -157,13 +157,13 @@ The three subdirectories group the scenarios by contention setup:
 | v_mltpl_add | Computes a vector multiplication followed by addition. |
 | v_rect | Applies the rectifier function to input data. |
 | v_scale | Scales the values of a vector by a constant factor. |
-| profile_optimizer | Railway application based on a genetic algorithm, described in the paper's use case section. |
+| profile_optimizer | Railway application based on a genetic algorithm for obtaining optimal speed pofile. Descrived in [Using MAST for modeling and response-time analysis of real-time applications with GPUs (JSA 2024)](https://doi.org/10.1016/j.sysarc.2024.103300). |
 | ldr_downsampling_f2 | Reduces the resolution of LIDAR point-cloud data by a factor of 2. Has an l1 variant. |
 | ldr_downsampling_f4 | Reduces the resolution of LIDAR point-cloud data by a factor of 4. Has an l2 variant. |
 | ldr_downsampling_f10 | Reduces the resolution of LIDAR point-cloud data by a factor of 10. |
 | ldr_filtering | Applies filtering to LIDAR point-cloud data to eliminate ground and distant objects. Has an l1 and an l2 variant. |
 
-The CSV files in [event_motitor_lectures](event_motitor_lectures) correspond to the measurements collected for these benchmarks under the reported monitoring configurations.
+The CSV files in [event_monitor_lectures](event_monitor_lectures) correspond to the measurements collected for these benchmarks under the reported monitoring configurations.
 
 ---
 
