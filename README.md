@@ -157,7 +157,7 @@ The three subdirectories group the scenarios by contention setup:
 | v_mltpl_add | Computes a vector multiplication followed by addition. |
 | v_rect | Applies the rectifier function to input data. |
 | v_scale | Scales the values of a vector by a constant factor. |
-| profile_optimizer | Railway application based on a genetic algorithm for obtaining optimal speed pofile. Descrived in [Using MAST for modeling and response-time analysis of real-time applications with GPUs (JSA 2024)](https://doi.org/10.1016/j.sysarc.2024.103300). |
+| profile_optimizer | Railway application based on a genetic algorithm for obtaining optimal speed pofile. Described in [Using MAST for modeling and response-time analysis of real-time applications with GPUs (JSA 2024)](https://doi.org/10.1016/j.sysarc.2024.103300). |
 | ldr_downsampling_f2 | Reduces the resolution of LIDAR point-cloud data by a factor of 2. Has an l1 variant. |
 | ldr_downsampling_f4 | Reduces the resolution of LIDAR point-cloud data by a factor of 4. Has an l2 variant. |
 | ldr_downsampling_f10 | Reduces the resolution of LIDAR point-cloud data by a factor of 10. |
